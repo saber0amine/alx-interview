@@ -1,65 +1,59 @@
 #!/usr/bin/python3
-"""0. N queens
-alx interview task"""
-
-
+"""doc doc doc"""
 import sys
 
 
-def isNvalid():
-    """checks if N is valid"""
+def solve_queens_problem(board_size):
+    """doc doc doc"""
+
+    def is_valid_position(pos, occupied_pos):
+        """doc doc doc"""
+        for i in range(len(occupied_pos)):
+            if (
+                occupied_pos[i] == pos or
+                occupied_pos[i] - i == pos - len(occupied_pos) or
+                occupied_pos[i] + i == pos + len(occupied_pos)
+            ):
+                return False
+        return True
+
+    def place_queens(board_size, index, occupied_pos, solutions):
+        """doc doc doc"""
+        if index == board_size:
+            solutions.append(occupied_pos[:])
+            return
+
+        for i in range(board_size):
+            if is_valid_position(i, occupied_pos):
+                occupied_pos.append(i)
+                place_queens(board_size, index + 1, occupied_pos, solutions)
+                occupied_pos.pop()
+
+    solutions = []
+    place_queens(board_size, 0, [], solutions)
+    return solutions
+
+
+def main():
+    """doc doc doc"""
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
 
     try:
-        n = int(sys.argv[1])
-
+        board_size = int(sys.argv[1])
     except ValueError:
-        print('N must be a number')
+        print("N must be a number")
         sys.exit(1)
 
-    if n < 4:
-        print('N must be at least 4')
+    if board_size < 4:
+        print("N must be at least 4")
         sys.exit(1)
 
-    solveNqueen(n)
-
-
-def solveNqueen(n: int):
-    """main function to solve the N queen problem"""
-    col = set()
-    posDiag = set()  # r+c
-    negDiag = set()  # r-c
-    resp = []
-
-    def print_sol(resp):
-        for row in resp:
-            print(row)
-
-    def backtrack(r, solution):
-        """implementation for backtrack algo"""
-        if r == n:
-            resp.append(solution)
-            return
-
-        for c in range(n):
-            if c in col or (r+c) in posDiag or (r-c) in negDiag:
-                continue
-
-            col.add(c)
-            posDiag.add(r+c)
-            negDiag.add(r-c)
-
-            backtrack(r + 1, solution + [[r, c]])
-
-            col.remove(c)
-            posDiag.remove(r+c)
-            negDiag.remove(r-c)
-
-    backtrack(0, [])
-    print_sol(resp)
+    solutions = solve_queens_problem(board_size)
+    for solution in solutions:
+        print([[i, solution[i]] for i in range(len(solution))])
 
 
 if __name__ == "__main__":
-    isNvalid()
+    main()
